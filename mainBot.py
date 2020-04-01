@@ -7,7 +7,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-LESSONNAME, DATE, LOCATION, BIO = range(4)
+LESSONNAME, LESSONDAY, LESSONTIME, LESSONDES = range(4)
 
 # Command Handlers:
 
@@ -17,16 +17,22 @@ def start(update, context):
                               "with adding some lesson to your schedule.")
 
 
-# Add lesson to schedule:
 def add_lesson(update, context):
-    print()
-
+    update.message.reply_text('What\'s the lesson name?')
+    return LESSONNAME
 
 def lessonname(update, context):
+    reply_week = [['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun']]
     user = update.message.from_user
     logger.info("Name of %s: %s", user.title, update.message.text)
     update.message.reply_text('Now we know how to call it! Let\'s set a date')
-    return DATE
+    reply_markup=ReplyKeyboardMarkup(reply_week, one_time_keyboard=True)
+    return LESSONDAY
+
+
+def lessonday(update, context):
+    print()
+
 
 # Remove lesson from schedule:
 def rem_lesson(update, context):
@@ -59,20 +65,21 @@ def main():
     updater = Updater("1116601888:AAElt3W9Iw7Dav6TFmHId9ihZ9HT6qdoyZo", use_context=True)
     dp = updater.dispatcher
 
-    # Here add the commands:
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
-
-        states={
-            LESSONNAME: [MessageHandler(Filters.text, lessonname)]
-
-        },
-
-        fallbacks=[CommandHandler('cancel'), cancel]
-    )
     dp.add_handler(CommandHandler("start", start))
 
+    # Here add the commands:
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('add', add_lesson)],
 
+        states={
+            LESSONNAME: [MessageHandler(Filters.text, lessonname)],
+            LESSONDAY: [MessageHandler(Filters.regex('^(Mon|Tue|Wen|Thu|Fri|Sat|Sun)$'), lessonday)]
+        },
+
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+
+    dp.add_handler(conv_handler)
 
     dp.add_error_handler(error)
 
