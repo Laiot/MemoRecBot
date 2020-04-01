@@ -1,7 +1,11 @@
 import logging
+from uuid import uuid4
+
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from _collections import defaultdict
+
+import mysql.connector
 
 
 # Utiliy function to create dictionary
@@ -9,9 +13,8 @@ def multi_dict(K, type):
     if K == 1:
         return defaultdict(type)
     else:
-        return defaultdict(lambda: multi_dict(K-1, type))
+        return defaultdict(lambda: multi_dict(K - 1, type))
 
-# lessons = multi_dict(3, Array)
 
 # Logging:
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -36,14 +39,17 @@ def add_lesson(update, context):
 def lessonname(update, context):
     reply_week = [['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun']]
     user = update.message.from_user
-    logger.info("Name of %s: %s", user.title, update.message.text)
+    key = str(uuid4())
+    tmp_name = update.message.text
+    context.user_data[key] = tmp_name
+    logger.info("Name of %s: %s", user.title, tmp_name)
     update.message.reply_text('Now we know how to call it! Let\'s set a date')
-    reply_markup=ReplyKeyboardMarkup(reply_week, one_time_keyboard=True)
+    reply_markup = ReplyKeyboardMarkup(reply_week, one_time_keyboard=True)
     return LESSONDAY
 
 
 def lessonday(update, context):
-    print()
+    user = update.message.from_user
 
 
 def lessontime(update, context):
