@@ -1,6 +1,17 @@
 import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from _collections import defaultdict
+
+
+# Utiliy function to create dictionary
+def multi_dict(K, type):
+    if K == 1:
+        return defaultdict(type)
+    else:
+        return defaultdict(lambda: multi_dict(K-1, type))
+
+# lessons = multi_dict(3, Array)
 
 # Logging:
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -9,7 +20,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 LESSONNAME, LESSONDAY, LESSONTIME, LESSONDES = range(4)
 
-# Command Handlers:
 
 # Command on start:
 def start(update, context):
@@ -17,9 +27,11 @@ def start(update, context):
                               "with adding some lesson to your schedule.")
 
 
+# Start of add_lesson main function states: NAME, DAY, TIME, DESCRIPTION:
 def add_lesson(update, context):
     update.message.reply_text('What\'s the lesson name?')
     return LESSONNAME
+
 
 def lessonname(update, context):
     reply_week = [['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun']]
@@ -31,6 +43,14 @@ def lessonname(update, context):
 
 
 def lessonday(update, context):
+    print()
+
+
+def lessontime(update, context):
+    print()
+
+
+def lessondes(update, context):
     print()
 
 
