@@ -1,2 +1,2 @@
 # MemoRecBot
-Bot alerting you before a lesson. It also keeps track of the recorded lessons you haven't seen yet.
+The bot should have a command to add a lesson (with day of the week and time), remove a lesson, tell you what lesson you still need to watch (due to Covid, we're taking online classes this semester and we can watch them either live on Teams or the recorded vid afterwards) and from there letting you check a lesson you've already watched. I'm also thinking of passing the bot an HTML file for the schedule but that will come later.
